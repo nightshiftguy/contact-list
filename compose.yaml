@@ -1,0 +1,10 @@
+services:
+  mysql :
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_DATABASE=ps-projekt'
+      - 'MYSQL_ROOT_PASSWORD=password'
+      - 'MYSQL_USER=user'
+      - 'MYSQL_PASSWORD=password'
+    ports:
+      - '3306:3306'

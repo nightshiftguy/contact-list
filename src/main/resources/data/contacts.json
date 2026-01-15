@@ -4,19 +4,22 @@
       "firstName": "John",
       "lastName": "Kowalski",
       "phoneNumber": "111222333",
-      "email": "email@x"
+      "email": "email@user1",
+      "user_id": 1
     },
     {
-    "firstName": "Michael",
-    "lastName": "Kowalski",
-    "phoneNumber": "123123123",
-    "email": "email@y"
+      "firstName": "Michael",
+      "lastName": "Kowalski",
+      "phoneNumber": "123123123",
+      "email": "email@user1",
+      "user_id": 1
     },
     {
-    "firstName": "Emil",
-    "lastName": "Nowak",
-    "phoneNumber": "000111000",
-    "email": "email@z"
+      "firstName": "Emil",
+      "lastName": "Nowak",
+      "phoneNumber": "000111000",
+      "email": "email@user2",
+      "user_id": 2
     }
   ]
 }

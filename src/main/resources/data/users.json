@@ -1,0 +1,19 @@
+{
+  "users":[
+    {
+      "email": "user1@email",
+      "password": "{noop}password",
+      "role": "USER"
+    },
+    {
+      "email": "user2@email",
+      "password": "{noop}password",
+      "role": "USER"
+    },
+    {
+      "email": "user3@email",
+      "password": "{noop}password",
+      "role": "USER"
+    }
+  ]
+}

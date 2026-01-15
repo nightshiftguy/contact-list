@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ps_projekt.User.Role;
 
 @Configuration
 @EnableWebSecurity
@@ -23,6 +24,8 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**")
                         .permitAll()
+                        .requestMatchers("/api/admin-contacts/**","/api/users").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers("/api/contacts/**").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
                         .anyRequest()
                         .authenticated()
                 )

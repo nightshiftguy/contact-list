@@ -22,36 +22,34 @@ public class ContactController {
     private final ContactRepository contactRepository;
     private final UserRepository userRepository;
 
-    private Optional<User> getCurrentUser(){
+    private User getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserEmail = authentication.getName();
-        return userRepository.findByEmail(currentUserEmail);
+        return userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(()-> new RuntimeException("User not found")
+                );
     }
 
     @GetMapping("")
     List<Contact> findUserContacts(){
-        return getCurrentUser().get().getContacts();
+        return getCurrentUser().getContacts();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @GetMapping("/send-email")
     void sendEmailWithContacts(){
-        List<Contact> contacts = getCurrentUser().get().getContacts();
+        List<Contact> contacts = getCurrentUser().getContacts();
         String htmlContent = HtmlMapper.mapContactListToHtmlTable(contacts);
         EmailService.SendEmailSMTP(
-                getCurrentUser().get().getEmail(),
+                getCurrentUser().getEmail(),
                 "Your Contacts - Contact List From PS Projekt",
                 htmlContent
         );
     }
     @GetMapping("/{id}")
     Contact findById(@PathVariable Long id) throws RuntimeException {
-        List<Contact> contacts =getCurrentUser().get().getContacts();
-        Optional<Contact> contact = contacts.stream().filter(c -> c.getId().equals(id)).findFirst();
-        if(contact.isEmpty()){
-            throw new ContactNotFoundException();
-        }
-        return contact.get();
+        return contactRepository.findByIdAndUser(id, getCurrentUser())
+                .orElseThrow(ContactNotFoundException::new);
     }
 
     @PostMapping("")
@@ -60,14 +58,14 @@ public class ContactController {
         if(contact.getUser()!=null){
             throw new ContactBadRequestException();
         }
-        contact.setUser(getCurrentUser().get());
+        contact.setUser(getCurrentUser());
         contactRepository.save(contact);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
     void update(@Valid @RequestBody Contact contact, @PathVariable Integer id){
-        if(!getCurrentUser().get().getContacts().contains(contact)){
+        if(!getCurrentUser().getContacts().contains(contact)){
             throw new ContactNotFoundException();
         }
         contactRepository.save(contact);
@@ -75,10 +73,9 @@ public class ContactController {
 
     @DeleteMapping("/{id}")
     void delete(@PathVariable Long id){
-        Contact contact = contactRepository.findById(id).get();
-        if(!getCurrentUser().get().getContacts().contains(contact)){
-            throw new ContactNotFoundException();
-        }
+        Contact contact = contactRepository
+                .findByIdAndUser(id, getCurrentUser())
+                .orElseThrow(ContactNotFoundException::new);
         contactRepository.delete(contact);
     }
 }

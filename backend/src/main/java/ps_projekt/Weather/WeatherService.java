@@ -1,9 +1,10 @@
 package ps_projekt.Weather;
 
 import org.springframework.web.client.RestClient;
+import tools.jackson.databind.JsonNode;
 
 public class WeatherService {
-    public static String getCurrentWeather(Location location){
+    public static JsonNode getCurrentWeather(Location location){
         RestClient defaultClient = RestClient.create();
         return defaultClient
                 .get()
@@ -11,6 +12,6 @@ public class WeatherService {
                         location.latitude,
                         location.longitude)
                 .retrieve()
-                .body(String.class);
+                .body(JsonNode.class);
     }
 }

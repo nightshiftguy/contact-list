@@ -24,7 +24,12 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
-        repository.save(user);
+        if(repository.findByEmail(request.getEmail()).isPresent()){
+            throw new IllegalArgumentException("User with this email already exists");
+        }
+        else{
+            repository.save(user);
+        }
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)

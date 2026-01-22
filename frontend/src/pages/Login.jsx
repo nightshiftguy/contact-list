@@ -1,24 +1,35 @@
-// pages/Login.jsx
+import { useState } from 'react';
 import { apiFetch } from '../api';
 
 export default function Login() {
+  const [errors, setErrors] = useState({});
+
   const submit = async (e) => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.target));
-    const res = await apiFetch('/auth/login', {
+    const formData = Object.fromEntries(new FormData(e.target));
+    const {ok, data} = await apiFetch('/auth/login', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(formData),
     });
 
-    const json = await res.json();
-    localStorage.setItem('token', json.token);
-    window.location.href = '/';
-  };
+    if(!ok){
+      setErrors(data);
+    }
+    else{
+      localStorage.setItem('token', data.token);
+      window.location.href = '/';
+    }
+  }
 
   return (
-    <form onSubmit={submit}>
+    <form onSubmit={submit} className='login-form'>
+      <h2>Log in</h2>
       <input name="email" placeholder="email" />
+      <p className="error">{errors.email}</p>
       <input name="password" type="password" placeholder="password" />
+      <p className="error">{errors.password}</p>
+
+      <p className="error">{errors.message}</p>
       <button>Login</button>
     </form>
   );

@@ -4,7 +4,7 @@ import { isLoggedIn } from '../auth';
 export default function Navbar() {
   const logged = isLoggedIn();
   return (
-    <nav>
+    <nav className='navbar'>
       <Link to="/">Home</Link> |{' '}
       <Link to="/weather">Weather</Link> |{' '}
       {!logged && (

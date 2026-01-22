@@ -1,10 +1,12 @@
 package ps_projekt.Auth;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import ps_projekt.Config.JwtService;
 import ps_projekt.User.Role;
 import ps_projekt.User.User;
@@ -25,7 +27,7 @@ public class AuthenticationService {
                 .role(Role.USER)
                 .build();
         if(repository.findByEmail(request.getEmail()).isPresent()){
-            throw new IllegalArgumentException("User with this email already exists");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with this email already exists");
         }
         else{
             repository.save(user);
@@ -36,18 +38,24 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Invalid email or password"
+            );
+        }
         var user = repository.findByEmail(request.getEmail())
-                .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+                .orElseThrow(() -> new IllegalStateException("User missing after authentication"));
         return AuthenticationResponse.builder()
-                .token(jwtToken)
+                .token(jwtService.generateToken(user))
                 .build();
     }
 }

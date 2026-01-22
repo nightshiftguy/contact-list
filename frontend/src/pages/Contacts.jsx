@@ -1,9 +1,6 @@
-// src/pages/Contacts.jsx
 import { useEffect, useState } from 'react';
 import {
   getContacts,
-  createContact,
-  updateContact,
   deleteContact,
   sendEmailWithContacts
 } from '../api/contacts';
@@ -19,17 +16,6 @@ export default function Contacts() {
     load();
   }, []);
 
-  const create = async (contact) => {
-    await createContact(contact);
-    load();
-  };
-
-  const update = async (contact) => {
-    await updateContact(editing.id, contact);
-    setEditing(null);
-    load();
-  };
-
   const remove = async (id) => {
     await deleteContact(id);
     load();
@@ -38,22 +24,21 @@ export default function Contacts() {
   return (
     <>
       <h2>Contacts</h2>
-      <button onClick={() => sendEmailWithContacts()}>Send email with contacts</button>
-
-      <ContactForm
-        initial={editing}
-        onSubmit={editing ? update : create}
-      />
-
       <ul>
         {contacts.map(c => (
           <li key={c.id}>
-            {c.firstName} {c.lastName} – {c.email}
+            {c.firstName} {c.lastName} {c.email} {c.phoneNumber}
             <button onClick={() => setEditing(c)}>Edit</button>
             <button onClick={() => remove(c.id)}>Delete</button>
           </li>
         ))}
       </ul>
+
+      <ContactForm
+        initial={editing}
+      />
+
+      <button onClick={() => sendEmailWithContacts()}>Send email with contacts</button>
     </>
   );
 }

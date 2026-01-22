@@ -1,27 +1,44 @@
-// src/components/ContactForm.jsx
 import { useState } from 'react';
+import { apiFetch } from '../api';
 
-export default function ContactForm({ initial, onSubmit }) {
-  const [form, setForm] = useState(
-    initial ?? { firstName: '', lastName: '', email: '', phoneNumber: '' }
-  );
+export default function ContactForm({ initial }) {
+  const [errors, setErrors] = useState({});
+  const isEdit = !!initial;
 
-  const change = e =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
-  const submit = e => {
+  const submit = async e => {
     e.preventDefault();
-    onSubmit(form);
-    setForm({ firstName: '', lastName: '', email: '', phoneNumber: '' });
+    const formData = Object.fromEntries(new FormData(e.target));
+    const { ok, data } = await apiFetch(
+      isEdit ? `/contacts/${initial.id}` : '/contacts',
+      {
+        method: isEdit ? 'PUT' : 'POST',
+        body: JSON.stringify(formData),
+      }
+    );
+
+    if (!ok) setErrors(data);
+    else window.location.reload();
   };
 
   return (
-    <form onSubmit={submit}>
-      <input name="firstName" placeholder="First name" value={form.firstName} onChange={change} />
-      <input name="lastName" placeholder="Last name" value={form.lastName} onChange={change} />
-      <input name="email" placeholder="Email" value={form.email} onChange={change} />
-      <input name="phoneNumber" placeholder="Phone" value={form.phoneNumber} onChange={change} />
-      <button>Save</button>
+    <form onSubmit={submit} className="contact-form">
+      <h2>{isEdit ? 'Edit contact' : 'Add contact'}</h2>
+
+      <input name="firstName" defaultValue={initial?.firstName ?? ''} />
+      <p className="error">{errors?.firstName}</p>
+
+      <input name="lastName" defaultValue={initial?.lastName ?? ''} />
+      <p className="error">{errors?.lastName}</p>
+
+      <input name="email" defaultValue={initial?.email ?? ''} />
+      <p className="error">{errors?.email}</p>
+
+      <input name="phoneNumber" defaultValue={initial?.phoneNumber ?? ''} />
+      <p className="error">{errors?.phoneNumber}</p>
+
+      <p className="error">{errors?.message}</p>
+
+      <button>{isEdit ? 'Update' : 'Save'}</button>
     </form>
   );
 }

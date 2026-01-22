@@ -25,10 +25,10 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors((cors) -> cors
                         .configurationSource(corsConfigurationSource())
                 )
-                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/api/weather/**")
                         .permitAll()
                         .requestMatchers("/api/admin-contacts/**","/api/users/**").hasAuthority(Role.ADMIN.name())

@@ -1,4 +1,3 @@
-// pages/Home.jsx
 export default function Home() {
   return <>
     <h2>PS project - contact list</h2>

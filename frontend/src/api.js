@@ -1,21 +1,27 @@
 const API = 'http://127.0.0.1:8080/api';
 
-export function apiFetch(url, options = {}) {
+export async function apiFetch(url, options = {}) {
   const token = localStorage.getItem('token');
 
-  return fetch(API + url, {
+  const res = await fetch(API + url, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
       ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
-  }).then(res => {
-    if (res.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-      throw new Error('Unauthorized');
-    }
-    return res;
-     });
+  })
+
+  let json;
+  try {
+    json = await res.json();
+  } catch {
+    json = undefined;
+  }
+
+  if(res.status === 401 && json.message === "JWT token has expired") {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+  }
+  return { ok: res.ok, status: res.status, data: json };
 }

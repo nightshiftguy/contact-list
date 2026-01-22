@@ -1,8 +1,8 @@
 package ps_projekt.Contact;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +13,6 @@ import ps_projekt.User.UserRepository;
 import ps_projekt.utils.HtmlMapper;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/contacts")
@@ -47,27 +46,31 @@ public class ContactController {
         );
     }
     @GetMapping("/{id}")
-    Contact findById(@PathVariable Long id) throws RuntimeException {
-        return contactRepository.findByIdAndUser(id, getCurrentUser())
+    public Contact findById(@PathVariable Long id) {
+        User user = getCurrentUser();
+        return contactRepository.findByIdAndUser(id, user)
                 .orElseThrow(ContactNotFoundException::new);
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     void create(@Valid @RequestBody Contact contact){
-        if(contact.getUser()!=null){
-            throw new ContactBadRequestException();
-        }
         contact.setUser(getCurrentUser());
         contactRepository.save(contact);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    void update(@Valid @RequestBody Contact contact, @PathVariable Integer id){
-        if(!getCurrentUser().getContacts().contains(contact)){
-            throw new ContactNotFoundException();
-        }
+    void update(@Valid @RequestBody Contact newContact, @PathVariable Long id){
+        Contact contact = contactRepository
+                .findByIdAndUser(id, getCurrentUser())
+                .orElseThrow(ContactNotFoundException::new);
+
+        contact.setFirstName(newContact.getFirstName());
+        contact.setLastName(newContact.getLastName());
+        contact.setEmail(newContact.getEmail());
+        contact.setPhoneNumber(newContact.getPhoneNumber());
+
         contactRepository.save(contact);
     }
 

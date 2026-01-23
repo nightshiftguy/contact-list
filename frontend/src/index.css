@@ -89,7 +89,7 @@ form > h2{
 .error{
   margin:0;
   color:red;
-  height:1rem;
+  height:2rem;
 }
 
 button:focus,

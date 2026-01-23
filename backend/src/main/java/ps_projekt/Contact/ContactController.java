@@ -54,14 +54,20 @@ public class ContactController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    void create(@Valid @RequestBody Contact contact){
+    void create(@Valid @RequestBody ContactRequest newContact){
+        Contact contact = new Contact();
+        contact.setFirstName(newContact.getFirstName());
+        contact.setLastName(newContact.getLastName());
+        contact.setEmail(newContact.getEmail());
+        contact.setPhoneNumber(newContact.getPhoneNumber());
+
         contact.setUser(getCurrentUser());
         contactRepository.save(contact);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    void update(@Valid @RequestBody Contact newContact, @PathVariable Long id){
+    void update(@Valid @RequestBody ContactRequest newContact, @PathVariable Long id){
         Contact contact = contactRepository
                 .findByIdAndUser(id, getCurrentUser())
                 .orElseThrow(ContactNotFoundException::new);

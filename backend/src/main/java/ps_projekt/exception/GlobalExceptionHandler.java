@@ -27,8 +27,11 @@ public class GlobalExceptionHandler {
                 .stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,
-                        FieldError::getDefaultMessage
+                        FieldError::getDefaultMessage,
+                        (first, second) -> first
                 ));
+
         return ResponseEntity.badRequest().body(errors);
     }
+
 }

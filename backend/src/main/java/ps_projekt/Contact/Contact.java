@@ -1,15 +1,10 @@
 package ps_projekt.Contact;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.access.prepost.PreAuthorize;
 import ps_projekt.SensitiveFieldEncryptor;
 import ps_projekt.User.User;
 
@@ -21,11 +16,11 @@ public class Contact{
         @Id
         @GeneratedValue
         private Long id;
+        @NotEmpty
         @Column(name = "first_name", length = 180)
-        @NotEmpty
         private String firstName;
-        @Column(name = "last_name", length = 180)
         @NotEmpty
+        @Column(name = "last_name", length = 180)
         private String lastName;
         @NotEmpty
         @Column(name = "phone_number", length = 180)

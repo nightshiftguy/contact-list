@@ -23,5 +23,8 @@ export async function apiFetch(url, options = {}) {
     localStorage.removeItem('token');
     window.location.href = '/login';
   }
+  if(res.status === 403) {
+    window.location.href = '/';
+  }
   return { ok: res.ok, status: res.status, data: json };
 }

@@ -1,8 +1,8 @@
 package ps_projekt.Contact;
 
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +20,7 @@ import java.util.List;
 public class ContactController {
     private final ContactRepository contactRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     private User getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -36,14 +37,18 @@ public class ContactController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @GetMapping("/send-email")
-    void sendEmailWithContacts(){
+    void sendEmailWithContacts() {
         List<Contact> contacts = getCurrentUser().getContacts();
         String htmlContent = HtmlMapper.mapContactListToHtmlTable(contacts);
-        EmailService.SendEmailSMTP(
-                getCurrentUser().getEmail(),
-                "Your Contacts - Contact List From PS Projekt",
-                htmlContent
-        );
+        try {
+            emailService.sendEmail(
+                    getCurrentUser().getEmail(),
+                    "Your Contacts - Contact List From PS Projekt",
+                    htmlContent
+            );
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
     @GetMapping("/{id}")
     public Contact findById(@PathVariable Long id) {

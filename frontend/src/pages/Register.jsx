@@ -1,23 +1,25 @@
 import { useState } from 'react';
 import { apiFetch } from '../api';
+import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
   const [errors, setErrors] = useState({});
-
+  const navigate = useNavigate();
   const submit = async (e) => {
     e.preventDefault();
+    setErrors({});
     const formData = Object.fromEntries(new FormData(e.target));
     const {ok, data} = await apiFetch('/auth/register', {
       method: 'POST',
       body: JSON.stringify(formData),
     });
 
-    if(!ok){
+   
+    if(!ok && data.message!=="User already exist but needs verification"){
       setErrors(data);
     }
     else{
-      localStorage.setItem('token', data.token);
-      window.location.href = '/';
+      navigate('/verify', { state: { email: formData.email } });
     }
 }
 

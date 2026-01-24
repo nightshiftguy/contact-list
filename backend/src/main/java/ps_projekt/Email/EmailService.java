@@ -1,35 +1,28 @@
 package ps_projekt.Email;
-import java.util.Properties;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
 public class EmailService {
-    public static void SendEmailSMTP(String recipientEmail, String subject, String body) {
-        String senderEmail = "ps.projekt.automatic.email@gmail.com";     // sender address
-        String host = "smtp.gmail.com";          // server SMTP
+    private final JavaMailSender emailSender;
 
-        Properties props = new Properties();
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.port", "587");    // TLS port
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true"); // TLS
+    @Async
+    public void sendEmail(String to, String subject, String body) throws MessagingException {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-        Session session = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(senderEmail, "vyel jiem meva jucw");
-            }
-        });
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(body, true);
+        helper.setFrom("twoj_email@gmail.com"); // MUSI się zgadzać z loginem
 
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(senderEmail));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject(subject);
-            message.setContent(body, "text/html; charset=utf-8");
-            Transport.send(message);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        emailSender.send(message);
     }
 }

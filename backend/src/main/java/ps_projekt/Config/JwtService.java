@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,17 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private static final String SECRET_KEY = "68add652bdf02d3a225d402cdf559f4dd9009b7fd75b411bb5801ee363a92943";
+    private final SecretKey secretKey;
+
+    public JwtService(@Value("${spring.jwt.secret_key}") String secret) {
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+
+        if (keyBytes.length < 32) {
+            throw new IllegalArgumentException("JWT secret key too short (min 256 bits)");
+        }
+
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -37,8 +48,8 @@ public class JwtService {
                 .claims(extraClaims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-                .signWith(getSignInKey())
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .signWith(secretKey, Jwts.SIG.HS256)
                 .compact();
     }
 
@@ -58,14 +69,10 @@ public class JwtService {
     private Claims extractAllClaims(String token){
         return Jwts
                 .parser()
-                .verifyWith(getSignInKey())
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
     }
 
-    private SecretKey getSignInKey(){
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
 }

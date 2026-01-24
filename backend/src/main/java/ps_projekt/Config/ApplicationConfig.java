@@ -3,6 +3,7 @@ package ps_projekt.Config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,6 +20,7 @@ import java.util.Locale;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableAsync
 public class ApplicationConfig {
     private final UserRepository repository;
 

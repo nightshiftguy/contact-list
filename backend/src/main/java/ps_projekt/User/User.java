@@ -7,18 +7,19 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.jspecify.annotations.Nullable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.server.ResponseStatusException;
 import ps_projekt.Contact.Contact;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "_user")
 public class User implements UserDetails {
@@ -27,12 +28,26 @@ public class User implements UserDetails {
     private Long id;
     private String email;
     private String password;
+    private Boolean enabled;
+    private Boolean locked;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @Column(name="verification_code")
+    private String verificationCode;
+    @Column(name="verification_expiration")
+    private LocalDateTime verificationCodeExpiresAt;
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     @Getter
     private List<Contact> contacts;
+
+    public User(Role role, Boolean enabled, String password, String email) {
+        this.role = role;
+        this.locked = false;
+        this.enabled = enabled;
+        this.password = password;
+        this.email = email;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -40,7 +55,7 @@ public class User implements UserDetails {
     }
 
     @Override
-    public @Nullable String getPassword() {
+    public String getPassword() {
         return password;
     }
 
@@ -56,7 +71,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
@@ -65,5 +80,5 @@ public class User implements UserDetails {
     }
 
     @Override
-    public boolean isEnabled(){return true;}
+    public boolean isEnabled(){return enabled;}
 }

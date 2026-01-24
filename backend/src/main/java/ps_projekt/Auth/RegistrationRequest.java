@@ -14,8 +14,8 @@ import ps_projekt.Contact.ContactRequest;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@GroupSequence({ContactRequest.First.class, ContactRequest.Second.class, RegisterRequest.class})
-public class RegisterRequest {
+@GroupSequence({ContactRequest.First.class, ContactRequest.Second.class, RegistrationRequest.class})
+public class RegistrationRequest {
     public interface First {}
     public interface Second {}
     @NotBlank(groups = ContactRequest.First.class)

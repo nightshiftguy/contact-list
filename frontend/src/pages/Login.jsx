@@ -5,6 +5,7 @@ export default function Login() {
   const [errors, setErrors] = useState({});
 
   const submit = async (e) => {
+    setErrors({});
     e.preventDefault();
     const formData = Object.fromEntries(new FormData(e.target));
     const {ok, data} = await apiFetch('/auth/login', {

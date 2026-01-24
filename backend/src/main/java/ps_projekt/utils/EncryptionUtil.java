@@ -1,24 +1,27 @@
 package ps_projekt.utils;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+@Component
 public class EncryptionUtil {
-    private static final String ENC_ALGORITHM = "AES";
-    private static final SecretKey SECRET_KEY = generateKey();
 
-    private static SecretKey generateKey() {
-        try {
-            return new SecretKeySpec("b7b866708107ab46f6444b425ca225d0".getBytes(StandardCharsets.UTF_8), "AES");
-        } catch (Exception e) {
-            throw new RuntimeException("Error generating secret key", e);
-        }
+    private final String ENC_ALGORITHM ;
+    private final SecretKey SECRET_KEY;
+
+    public EncryptionUtil(@Value("${spring.encryption.sensitive-field.algorithm}") String algorithm, @Value("${spring.encryption.sensitive-field.key}") String key){
+        this.ENC_ALGORITHM = algorithm;
+        this.SECRET_KEY = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
     }
 
-    public static String encrypt(String data) {
+    public String encrypt(String data) {
         try {
             Cipher cipher = Cipher.getInstance(ENC_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, SECRET_KEY);
@@ -29,7 +32,7 @@ public class EncryptionUtil {
         }
     }
 
-    public static String decrypt(String encryptedData) {
+    public String decrypt(String encryptedData) {
         try {
             Cipher cipher = Cipher.getInstance(ENC_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, SECRET_KEY);

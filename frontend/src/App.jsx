@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Contacts from './pages/Contacts';
 import ProtectedRoute from './ProtectedRoute';
 import Logout from './pages/Logout';
+import Verify from './pages/Verify';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/weather" element={<Weather />} />
+            <Route path="/verify" element={<Verify />} />
             <Route path="/contacts" element={
               <ProtectedRoute>
                 <Contacts />

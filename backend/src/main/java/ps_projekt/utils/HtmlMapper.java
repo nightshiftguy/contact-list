@@ -1,14 +1,15 @@
 package ps_projekt.utils;
 
-import ps_projekt.Contact.Contact;
+import ps_projekt.Contact.ContactRequest;
 
 import java.util.List;
 
 public class HtmlMapper {
-    public static String mapContactListToHtmlTable(List<Contact> contactList){
+    public static String mapContactListToHtmlTable(List<ContactRequest> contactList){
          StringBuilder htmlTable = new StringBuilder();
-            htmlTable.append("<h1>Your Contacts</h1>");
-            htmlTable.append("<table border='1' style='border-collapse: collapse;'>");
+            htmlTable.append("<body style=\"font-family: Arial, sans-serif;\">");
+            htmlTable.append("<h1 style=\"color: #333;\">Your Contacts</h1>");
+            htmlTable.append("<table border='1' cellpadding=\"8\" style='border-collapse: collapse; padding: 5px; color: #333;'>");
             if(contactList.isEmpty()){
                 htmlTable.append("<tr><td>No contacts available</td></tr>");
             } else {
@@ -39,6 +40,7 @@ public class HtmlMapper {
                 }
             }
             htmlTable.append("</table>");
+        htmlTable.append("</body>");
             return htmlTable.toString();
     }
 }

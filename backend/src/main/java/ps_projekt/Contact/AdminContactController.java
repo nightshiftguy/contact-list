@@ -15,7 +15,7 @@ import java.util.Optional;
 public class AdminContactController {
     private final ContactRepository contactRepository;
     private final UserRepository userRepository;
-
+/*
     @GetMapping("")
     List<Contact> findAll(){
         return contactRepository.findAll();
@@ -45,5 +45,5 @@ public class AdminContactController {
     @DeleteMapping("/{id}")
     void delete(@PathVariable Long id){
         contactRepository.delete(contactRepository.findById(id).get());
-    }
+    }*/
 }

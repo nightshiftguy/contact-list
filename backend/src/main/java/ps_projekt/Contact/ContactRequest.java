@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @Builder
@@ -20,10 +21,12 @@ public class ContactRequest {
     public interface Second {}
 
     @NotBlank(groups = First.class)
+    @Length(max = 180, message = "First name must be at most 180 characters", groups = First.class)
     @Pattern(regexp = "^[\\p{L} -]+$", message = "Only letters are allowed", groups = Second.class)
     private String firstName;
 
     @NotBlank(groups = First.class)
+    @Length(max = 180, message = "First name must be at most 180 characters", groups = First.class)
     @Pattern(regexp = "^[\\p{L} -]+$", message = "Only letters are allowed", groups = Second.class)
     private String lastName;
 

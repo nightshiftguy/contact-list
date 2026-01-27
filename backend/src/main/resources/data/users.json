@@ -11,12 +11,6 @@
       "password": "$2a$12$GXf.RwtcAyihZ3fBWpMipOxbZGSivD/uX0vnv/.6PhcamwOJ3yKem",
       "role": "USER",
       "enabled": "true"
-    },
-    {
-      "email": "admin@email",
-      "password": "$2a$12$GXf.RwtcAyihZ3fBWpMipOxbZGSivD/uX0vnv/.6PhcamwOJ3yKem",
-      "role": "ADMIN",
-      "enabled": "true"
     }
   ]
 }

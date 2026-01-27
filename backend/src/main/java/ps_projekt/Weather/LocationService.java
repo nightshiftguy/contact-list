@@ -1,6 +1,9 @@
 package ps_projekt.Weather;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.server.ResponseStatusException;
 import tools.jackson.databind.JsonNode;
 
 public class LocationService {
@@ -12,7 +15,9 @@ public class LocationService {
                 .retrieve()
                 .body(JsonNode.class);
         JsonNode first = root.path("results").get(0);
-
+        if(first==null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "City not found");
+        }
         Location location = new Location();
         location.latitude = first.path("latitude").asString();
         location.longitude = first.path("longitude").asString();

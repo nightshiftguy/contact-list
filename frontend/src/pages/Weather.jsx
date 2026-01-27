@@ -4,10 +4,18 @@ import { apiFetch } from '../api';
 export default function Weather() {
   const [city, setCity] = useState('Kraków');
   const [weather, setWeather] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const load = async () => {
     const {data, ok} = await apiFetch(`/weather?city=${city}`);
-    setWeather(data.current);
+
+    if(!ok){
+      setErrors(data);
+    }
+    else{
+      setErrors(null);
+      setWeather(data.current);
+    }
   };
 
   useEffect(() => {
@@ -20,7 +28,8 @@ export default function Weather() {
         <input value={city} onChange={(e) => setCity(e.target.value)} />
         <button onClick={load}>Search</button>
       </div>
-      {weather && (
+      {errors && (<p className="error">{errors.message}</p>)}
+      {!errors && weather && (
         <div>
           <p>Temperature: {weather.temperature_2m} °C</p>
           <p>Rain: {weather.rain} mm</p>

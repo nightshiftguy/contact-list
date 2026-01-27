@@ -36,7 +36,7 @@ export default function Verify() {
       setErrors(data);
     } else {
       localStorage.setItem('token', data.token);
-      alert('Verification succesfull');
+      alert('Verification successful');
       window.location.href = '/';
     }
   };

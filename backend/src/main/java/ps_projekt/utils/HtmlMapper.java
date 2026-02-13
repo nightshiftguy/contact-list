@@ -3,6 +3,7 @@ package ps_projekt.utils;
 import ps_projekt.Contact.ContactRequest;
 
 import java.util.List;
+import java.util.Map;
 
 public class HtmlMapper {
     public static String mapContactListToHtmlTable(List<ContactRequest> contactList){
@@ -13,13 +14,20 @@ public class HtmlMapper {
             if(contactList.isEmpty()){
                 htmlTable.append("<tr><td>No contacts available</td></tr>");
             } else {
+                Map<String, String> fieldNames = Map.of(
+                        "firstName", "First Name",
+                        "lastName", "Last Name",
+                        "phoneNumber", "Phone",
+                        "email", "Email"
+                );
                 // Table header
                 htmlTable.append("<tr>");
                 Object firstItem = contactList.get(0);
                 for (var field : firstItem.getClass().getDeclaredFields()) {
                     if(field.getName().equals("user")) continue; // Skip user field
                     field.setAccessible(true);
-                    htmlTable.append("<th>").append(field.getName()).append("</th>");
+                    String header = fieldNames.getOrDefault(field.getName(), field.getName());
+                    htmlTable.append("<th>").append(header).append("</th>");
                 }
                 htmlTable.append("</tr>");
 

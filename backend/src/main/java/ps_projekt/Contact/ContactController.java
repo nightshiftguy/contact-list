@@ -1,6 +1,5 @@
 package ps_projekt.Contact;
 
-import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -52,10 +51,10 @@ public class ContactController {
         try {
             emailService.sendEmail(
                     getCurrentUser().getEmail(),
-                    "Your Contacts - Contact List From PS Projekt",
+                    "Your Contacts - Contact List Project",
                     htmlContent
             );
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -1,6 +1,5 @@
 package ps_projekt.Auth;
 
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -130,7 +129,7 @@ public class AuthenticationService {
 
         try {
             emailService.sendEmail(user.getEmail(), subject, htmlMessage);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

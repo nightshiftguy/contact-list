@@ -1,28 +1,36 @@
 package ps_projekt.Email;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import com.resend.*;
+import com.resend.core.exception.ResendException;
+import com.resend.services.emails.model.CreateEmailOptions;
+import com.resend.services.emails.model.CreateEmailResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
-    private final JavaMailSender emailSender;
+    @Value("${spring.mail.username}")
+    private String emailUsername;
+
+    private final Resend resend;
 
     @Async
-    public void sendEmail(String to, String subject, String body) throws MessagingException {
-        MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+    public void sendEmail(String to, String subject, String body) throws ResendException {
+        CreateEmailOptions params = CreateEmailOptions.builder()
+                .from(emailUsername)
+                .to(to)
+                .subject(subject)
+                .html(body)
+                .build();
 
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setText(body, true);
-        helper.setFrom("twoj_email@gmail.com"); // MUSI się zgadzać z loginem
-
-        emailSender.send(message);
+        try {
+            CreateEmailResponse data = resend.emails().send(params);
+            System.out.println(data.getId());
+        } catch (ResendException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,4 +1,4 @@
-const API = 'http://127.0.0.1:8080/api';
+const API = import.meta.env.VITE_API_URL;
 
 export async function apiFetch(url, options = {}) {
   const token = localStorage.getItem('token');

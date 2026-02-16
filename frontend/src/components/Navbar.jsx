@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
-import { isLoggedIn } from '../auth';
 
-export default function Navbar() {
-  const logged = isLoggedIn();
+export default function Navbar({ logged, setLogged }) {
   return (
     <nav className='navbar'>
       <Link to="/">Home</Link> |{' '}

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -10,16 +11,17 @@ import Logout from './pages/Logout';
 import Verify from './pages/Verify';
 
 export default function App() {
+  const [logged, setLogged] = useState(!!localStorage.getItem('token'));
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar logged={logged} setLogged={setLogged} />
         <div className='container'>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login setLogged={setLogged}/>} />
             <Route path="/register" element={<Register />} />
             <Route path="/weather" element={<Weather />} />
-            <Route path="/verify" element={<Verify />} />
+            <Route path="/verify" element={<Verify setLogged={setLogged}/>} />
             <Route path="/contacts" element={
               <ProtectedRoute>
                 <Contacts />
@@ -27,7 +29,7 @@ export default function App() {
             } />
               <Route path="/logout" element={
                 <ProtectedRoute>
-                  <Logout />
+                  <Logout setLogged={setLogged}/>
                 </ProtectedRoute>
             } />
           </Routes>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useApiFetch } from '../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-export default function Verify() {
+export default function Verify({ setLogged }) {
   const apiFetch = useApiFetch();
   const [errors, setErrors] = useState({});
   const [code, setCode] = useState('');
@@ -37,6 +37,7 @@ export default function Verify() {
       setErrors(data);
     } else {
       localStorage.setItem('token', data.token);
+      setLogged(true);
       alert('Verification successful');
       navigate("/")
     }

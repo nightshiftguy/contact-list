@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useApiFetch } from '../api';
+import { useNavigate } from 'react-router-dom';
 
-export default function Login() {
+export default function Login({ setLogged }) {
   const apiFetch = useApiFetch();
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   const submit = async (e) => {
     setErrors({});
@@ -19,7 +21,8 @@ export default function Login() {
     }
     else{
       localStorage.setItem('token', data.token);
-      window.location.href = '/';
+      setLogged(true);
+      navigate("/");
     }
   }
 

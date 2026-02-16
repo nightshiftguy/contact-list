@@ -25,6 +25,7 @@ export function useApiFetch() {
 
     if(res.status === 401 && json.message === "JWT token has expired") {
       localStorage.removeItem('token');
+      setLogged(false);
       navigate("/login");
     }
     if(res.status === 403) {

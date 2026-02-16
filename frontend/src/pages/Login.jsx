@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { apiFetch } from '../api';
+import { useApiFetch } from '../api';
 
 export default function Login() {
+  const apiFetch = useApiFetch();
   const [errors, setErrors] = useState({});
 
   const submit = async (e) => {

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { apiFetch } from '../api';
+import { useApiFetch } from '../api';
 
 export default function Weather() {
+  const apiFetch = useApiFetch();
   const [city, setCity] = useState('Kraków');
   const [weather, setWeather] = useState(null);
   const [errors, setErrors] = useState({});

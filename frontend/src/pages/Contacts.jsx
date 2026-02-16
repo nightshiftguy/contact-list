@@ -1,23 +1,20 @@
 import { useEffect, useState } from 'react';
-import {
-  getContacts,
-  deleteContact,
-  sendEmailWithContacts
-} from '../api/contacts';
 import ContactForm from '../components/ContactForm';
+import { useApiFetch } from '../api';
 
 export default function Contacts() {
+  const apiFetch = useApiFetch();
   const [contacts, setContacts] = useState([]);
   const [editing, setEditing] = useState(null);
 
-  const load = () => getContacts().then(setContacts);
+  const load = () => apiFetch('/contacts').then(r => r.data).then(setContacts);
 
   useEffect(() => {
     load();
   }, []);
 
   const remove = async (id) => {
-    await deleteContact(id);
+    await apiFetch(`/contacts/${id}`, {method: 'DELETE',});
     load();
   };
 
@@ -36,9 +33,10 @@ export default function Contacts() {
 
       <ContactForm
         initial={editing}
+        onSave={load}
       />
 
-      <button onClick={() => sendEmailWithContacts()}>Send email with contacts</button>
+      <button onClick={() => apiFetch('/contacts/send-email')}>Send email with contacts</button>
     </>
   );
 }

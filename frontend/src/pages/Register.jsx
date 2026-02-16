@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { apiFetch } from '../api';
+import { useApiFetch } from '../api';
 import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
+  const apiFetch = useApiFetch();
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const submit = async (e) => {

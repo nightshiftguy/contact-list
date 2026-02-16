@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { apiFetch } from '../api';
+import { useApiFetch } from '../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Verify() {
+  const apiFetch = useApiFetch();
   const [errors, setErrors] = useState({});
   const [code, setCode] = useState('');
   const location = useLocation();
@@ -37,7 +38,7 @@ export default function Verify() {
     } else {
       localStorage.setItem('token', data.token);
       alert('Verification successful');
-      window.location.href = '/';
+      navigate("/")
     }
   };
 

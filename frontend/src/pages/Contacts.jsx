@@ -9,6 +9,11 @@ export default function Contacts() {
 
   const load = () => apiFetch('/contacts').then(r => r.data).then(setContacts);
 
+  const onSave = () => {
+  setEditing(null);
+  load();
+};
+
   useEffect(() => {
     load();
   }, []);
@@ -32,8 +37,9 @@ export default function Contacts() {
       </ul>
 
       <ContactForm
+        key={editing ? editing.id : 'new'}
         initial={editing}
-        onSave={load}
+        onSave={onSave}
       />
 
       <button onClick={() => apiFetch('/contacts/send-email')}>Send email with contacts</button>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useApiFetch } from '../api';
 
-export default function ContactForm({ initial }) {
+export default function ContactForm({ initial, onSave }) {
   const apiFetch = useApiFetch();
   const [errors, setErrors] = useState({});
   const isEdit = !!initial;
@@ -20,6 +20,7 @@ export default function ContactForm({ initial }) {
     if (!ok) setErrors(data);
     else {
       setErrors({});
+      if (!isEdit) e.target.reset();
       onSave();
     };
   };

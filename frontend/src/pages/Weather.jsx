@@ -1,36 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useApiFetch } from '../api';
 
 export default function Weather() {
-  const apiFetch = useApiFetch();
   const [city, setCity] = useState('Kraków');
-  const [weather, setWeather] = useState(null);
-  const [errors, setErrors] = useState({});
-
-  const load = async () => {
-    const {data, ok} = await apiFetch(`/weather?city=${city}`);
-
-    if(!ok){
-      setErrors(data);
-    }
-    else{
-      setErrors(null);
-      setWeather(data.current);
-    }
-  };
-
-  useEffect(() => {
-    load();
-  }, []);
-
+  const [route , setRoute] = useState(`/weather?city=${city}`);
+  const [options, setOptions] = useState({});
+  const {data, error, loading} = useApiFetch(route, options);
+  let weather = null;
+  if(data){
+    weather = data.current;
+  }
+  
   return (
     <>
       <div>
-        <input value={city} onChange={(e) => setCity(e.target.value)} />
-        <button onClick={load}>Search</button>
+        <label htmlFor="city">City: </label>
+        <input id="city" value={city} onChange={(e) => setCity(e.target.value)} />
+        <button onClick={() => {setRoute(`/weather?city=${city}`)}}>Search</button>
       </div>
-      {errors && (<p className="error">{errors.message}</p>)}
-      {!errors && weather && (
+      {loading && !error && <p>Loading...</p>}
+      {!loading && error && (<p className="error">{error.message}</p>)}
+      {!loading &&!error && weather && (
         <div>
           <p>Temperature: {weather.temperature_2m} °C</p>
           <p>Rain: {weather.rain} mm</p>

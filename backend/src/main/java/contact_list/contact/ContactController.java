@@ -67,7 +67,7 @@ public class ContactController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    void create(@Valid @RequestBody ContactRequest newContact){
+    public List<Contact> create(@Valid @RequestBody ContactRequest newContact){
         Contact contact = new Contact();
         contact.setFirstName(newContact.getFirstName());
         contact.setLastName(newContact.getLastName());
@@ -76,11 +76,11 @@ public class ContactController {
 
         contact.setUser(getCurrentUser());
         contactRepository.save(contact);
+        return getCurrentUser().getContacts();
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    void update(@Valid @RequestBody ContactRequest newContact, @PathVariable Long id){
+    public List<Contact> update(@Valid @RequestBody ContactRequest newContact, @PathVariable Long id){
         Contact contact = contactRepository
                 .findByIdAndUser(id, getCurrentUser())
                 .orElseThrow(ContactNotFoundException::new);
@@ -91,13 +91,15 @@ public class ContactController {
         contact.setPhoneNumber(newContact.getPhoneNumber());
 
         contactRepository.save(contact);
+        return getCurrentUser().getContacts();
     }
 
     @DeleteMapping("/{id}")
-    void delete(@PathVariable Long id){
+    public List<Contact>  delete(@PathVariable Long id){
         Contact contact = contactRepository
                 .findByIdAndUser(id, getCurrentUser())
                 .orElseThrow(ContactNotFoundException::new);
         contactRepository.delete(contact);
+        return getCurrentUser().getContacts();
     }
 }

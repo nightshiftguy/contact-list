@@ -3,44 +3,47 @@ import { useApiFetch } from '../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Verify({ setLogged }) {
-  const apiFetch = useApiFetch();
-  const [errors, setErrors] = useState({});
+  const [routeAndOptions, setRouteAndOptions] = useState({ route: null, options: {} });
+  const {data, error, loading, status} = useApiFetch(routeAndOptions.route, routeAndOptions.options);
+
   const [code, setCode] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
   const email = location.state?.email;
 
   useEffect(() => {
-    if (!email) navigate('/register');
-  }, [email]);
+    if(!email) navigate('/register');
+    if(!error && status===200) {
+      localStorage.setItem('token', data.token);
+      setLogged(true);
+      alert('Verification successful');
+      navigate("/");
+    }
+  }, [email, status]);
 
   const resendCode = async () => {
-    await apiFetch(`/auth/resend?email=${encodeURIComponent(email)}`, {
-      method: 'POST',
+    setRouteAndOptions({
+      route: `/auth/resend?email=${encodeURIComponent(email)}`,
+      options: {
+        method: 'POST',
+      }
     });
   };
 
   const submit = async (e) => {
     e.preventDefault();
-    setErrors({});
 
-    const { ok, data } = await apiFetch('/auth/verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email,
-        verificationCode: code,
-      }),
+    setRouteAndOptions({
+      route: '/auth/verify',
+      options: {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          verificationCode: code,
+        }),
+      }
     });
-
-    if (!ok) {
-      setErrors(data);
-    } else {
-      localStorage.setItem('token', data.token);
-      setLogged(true);
-      alert('Verification successful');
-      navigate("/")
-    }
   };
 
   return (
@@ -56,7 +59,7 @@ export default function Verify({ setLogged }) {
         onChange={(e) => setCode(e.target.value)}
       />
 
-      <p className="error">{errors.message}</p>
+      <p className="error">{error && error.message}</p>
 
       <button type="submit">Verify</button>
 
@@ -70,6 +73,8 @@ export default function Verify({ setLogged }) {
       >
         Resend code
       </a>
+
+      {loading && <p>Loading...</p>}
     </form>
   );
 }

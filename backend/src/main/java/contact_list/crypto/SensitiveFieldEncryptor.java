@@ -1,16 +1,13 @@
-package contact_list.security;
+package contact_list.crypto;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import org.springframework.beans.factory.annotation.Autowired;
-
 
 @Converter
 public class SensitiveFieldEncryptor implements AttributeConverter<String, String> {
-    private static EncryptionUtil encryptionUtil;
+    private final EncryptionUtil encryptionUtil;
 
-    @Autowired
-    public void setEncryptionUtil(EncryptionUtil util) {
-        encryptionUtil = util;
+    public SensitiveFieldEncryptor(EncryptionUtil encryptionUtil) {
+        this.encryptionUtil = encryptionUtil;
     }
 
     @Override

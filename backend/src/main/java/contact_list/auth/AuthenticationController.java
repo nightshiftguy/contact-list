@@ -1,5 +1,6 @@
 package contact_list.auth;
 
+import contact_list.security.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

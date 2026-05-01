@@ -1,5 +1,9 @@
-package contact_list.auth;
+package contact_list.security;
 
+import contact_list.auth.AuthenticationRequest;
+import contact_list.auth.AuthenticationResponse;
+import contact_list.auth.RegistrationRequest;
+import contact_list.auth.VerificationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;

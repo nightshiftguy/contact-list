@@ -1,4 +1,4 @@
-package contact_list.auth;
+package contact_list.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

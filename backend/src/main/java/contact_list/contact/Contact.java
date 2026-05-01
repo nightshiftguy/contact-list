@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import contact_list.security.SensitiveFieldEncryptor;
+import contact_list.crypto.SensitiveFieldEncryptor;
 import contact_list.user.User;
 
 @Entity

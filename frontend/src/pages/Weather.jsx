@@ -4,8 +4,7 @@ import { useApiFetch } from '../api';
 export default function Weather() {
   const [city, setCity] = useState('Kraków');
   const [route , setRoute] = useState(`/weather?city=${city}`);
-  const [options, setOptions] = useState({});
-  const {data, error, loading} = useApiFetch(route, options);
+  const {data, error, loading} = useApiFetch(route);
   let weather = null;
   if(data){
     weather = data.current;

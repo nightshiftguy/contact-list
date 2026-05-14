@@ -15,7 +15,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Navbar logged={logged} setLogged={setLogged} />
-        <div className='container'>
+        <main className='container'>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login setLogged={setLogged}/>} />
@@ -33,7 +33,7 @@ export default function App() {
                 </ProtectedRoute>
             } />
           </Routes>
-        </div>
+        </main>
         
     </BrowserRouter>
   );

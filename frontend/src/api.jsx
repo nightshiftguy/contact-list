@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export function useApiFetch(route, options) {
+export function useApiFetch(route, options={}) {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -12,7 +12,6 @@ export function useApiFetch(route, options) {
 
   function handleTokenExpiration() {
     localStorage.removeItem('token');
-    setLogged(false);
     navigate("/login");
   }
 

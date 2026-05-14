@@ -6,7 +6,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ContactNotFoundException extends ResponseStatusException {
-    public ContactNotFoundException(){
-        super(HttpStatus.NOT_FOUND,"Contact not found");
-    }
+  public ContactNotFoundException() {
+    super(HttpStatus.NOT_FOUND, "Contact not found");
+  }
 }

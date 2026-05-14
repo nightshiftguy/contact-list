@@ -6,8 +6,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class ContactBadRequestException extends ResponseStatusException {
-    public ContactBadRequestException(){
-        super(HttpStatus.BAD_REQUEST);
-    }
+  public ContactBadRequestException() {
+    super(HttpStatus.BAD_REQUEST);
+  }
 }
-

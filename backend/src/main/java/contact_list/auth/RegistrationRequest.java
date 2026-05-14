@@ -1,5 +1,6 @@
 package contact_list.auth;
 
+import contact_list.contact.ContactRequest;
 import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import contact_list.contact.ContactRequest;
 
 @Data
 @Builder
@@ -16,12 +16,18 @@ import contact_list.contact.ContactRequest;
 @NoArgsConstructor
 @GroupSequence({ContactRequest.First.class, ContactRequest.Second.class, RegistrationRequest.class})
 public class RegistrationRequest {
-    public interface First {}
-    public interface Second {}
-    @NotBlank(groups = ContactRequest.First.class)
-    @Email(groups = ContactRequest.Second.class)
-    private String email;
-    @NotBlank(groups = ContactRequest.First.class)
-    @Size(min = 8,message = "must be at least 8 characters long", groups = ContactRequest.Second.class)
-    private String password;
+  public interface First {}
+
+  public interface Second {}
+
+  @NotBlank(groups = ContactRequest.First.class)
+  @Email(groups = ContactRequest.Second.class)
+  private String email;
+
+  @NotBlank(groups = ContactRequest.First.class)
+  @Size(
+      min = 8,
+      message = "must be at least 8 characters long",
+      groups = ContactRequest.Second.class)
+  private String password;
 }

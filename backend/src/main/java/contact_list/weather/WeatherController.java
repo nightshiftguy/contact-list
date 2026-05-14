@@ -9,10 +9,9 @@ import tools.jackson.databind.JsonNode;
 @RestController
 @RequestMapping("api/weather")
 public class WeatherController {
-    @GetMapping("")
-    public JsonNode getCurrentWeather(@RequestParam String city) {
-        Location location = LocationService.getLocation(city);
-        return WeatherService.getCurrentWeather(location);
-    }
-
+  @GetMapping("")
+  public JsonNode getCurrentWeather(@RequestParam String city) {
+    Location location = LocationService.getLocation(city);
+    return WeatherService.getCurrentWeather(location);
+  }
 }

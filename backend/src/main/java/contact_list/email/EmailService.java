@@ -12,25 +12,21 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class EmailService {
-    @Value("${spring.mail.username}")
-    private String emailUsername;
+  @Value("${spring.mail.username}")
+  private String emailUsername;
 
-    private final Resend resend;
+  private final Resend resend;
 
-    @Async
-    public void sendEmail(String to, String subject, String body) throws ResendException {
-        CreateEmailOptions params = CreateEmailOptions.builder()
-                .from(emailUsername)
-                .to(to)
-                .subject(subject)
-                .html(body)
-                .build();
+  @Async
+  public void sendEmail(String to, String subject, String body) throws ResendException {
+    CreateEmailOptions params =
+        CreateEmailOptions.builder().from(emailUsername).to(to).subject(subject).html(body).build();
 
-        try {
-            CreateEmailResponse data = resend.emails().send(params);
-            System.out.println(data.getId());
-        } catch (ResendException e) {
-            e.printStackTrace();
-        }
+    try {
+      CreateEmailResponse data = resend.emails().send(params);
+      System.out.println(data.getId());
+    } catch (ResendException e) {
+      e.printStackTrace();
     }
+  }
 }

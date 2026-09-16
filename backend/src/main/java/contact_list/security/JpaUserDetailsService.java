@@ -1,6 +1,8 @@
-package contact_list.user;
+package contact_list.security;
 
+import contact_list.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +15,7 @@ public class JpaUserDetailsService implements UserDetailsService {
   private final UserRepository userRepository;
 
   @Override
+  @NullMarked
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
     return userRepository

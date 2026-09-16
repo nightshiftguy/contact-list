@@ -3,8 +3,8 @@ import { useApiFetch } from '../api';
 
 export default function Weather() {
   const [city, setCity] = useState('Kraków');
-  const [route , setRoute] = useState(`/weather?city=${city}`);
-  const {data, error, loading} = useApiFetch(route);
+  const [routeAndOptions , setRouteAndOptions] = useState({route: `/weather?city=${city}`, options: {}});
+  const {data, error, loading} = useApiFetch(routeAndOptions.route, routeAndOptions.options);
   let weather = null;
   if(data){
     weather = data.current;
@@ -15,7 +15,7 @@ export default function Weather() {
       <div>
         <label htmlFor="city">City: </label>
         <input id="city" value={city} onChange={(e) => setCity(e.target.value)} />
-        <button onClick={() => {setRoute(`/weather?city=${city}`)}}>Search</button>
+        <button onClick={() => {setRouteAndOptions({route: `/weather?city=${city}`, options: {}})}}>Search</button>
       </div>
       {loading && !error && <p>Loading...</p>}
       {!loading && error && (<p className="error">{error.message}</p>)}

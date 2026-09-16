@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export function useApiFetch(route, options={}) {
+export function useApiFetch(route, options) {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -11,6 +11,7 @@ export function useApiFetch(route, options={}) {
   const [status, setStatus] = useState(null);
 
   function handleTokenExpiration() {
+    console.warn("JWT Token expired redirecting to login page");
     localStorage.removeItem('token');
     navigate("/login");
   }

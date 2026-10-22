@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: "npm" 
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "maven"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "github-actions"
+    # Workflow files stored in the default location of `.github/workflows`
+    # Don't need to specify `/.github/workflows`.
+    directory: "/"
+    schedule:
+      interval: "weekly"

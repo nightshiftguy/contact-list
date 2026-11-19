@@ -35,17 +35,16 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) {
     http.csrf(AbstractHttpConfigurer::disable)
-        .cors((cors) -> cors.configurationSource(corsConfigurationSource()))
-        .authorizeHttpRequests(
-            auth ->
-                auth.requestMatchers("/api/auth/**", "/api/weather/**")
-                    .permitAll()
-                    .requestMatchers("/api/admin-contacts/**", "/api/users/**")
-                    .hasAuthority(Role.ADMIN.name())
-                    .requestMatchers("/api/contacts/**")
-                    .hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
-                    .anyRequest()
-                    .authenticated())
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .authorizeHttpRequests(auth ->
+            auth.requestMatchers("/api/auth/**", "/api/weather/**")
+                .permitAll()
+                .requestMatchers("/api/admin-contacts/**", "/api/users/**")
+                .hasAuthority(Role.ADMIN.name())
+                .requestMatchers("/api/contacts/**")
+                .hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
+                .anyRequest()
+                .authenticated())
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider())

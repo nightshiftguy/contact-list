@@ -39,14 +39,13 @@ public class ContactController {
     List<Contact> contacts = getCurrentUser().getContacts();
     List<ContactRequest> requests =
         contacts.stream()
-            .map(
-                c ->
-                    ContactRequest.builder()
-                        .firstName(c.getFirstName())
-                        .lastName(c.getLastName())
-                        .phoneNumber(c.getPhoneNumber())
-                        .email(c.getEmail())
-                        .build())
+            .map(c ->
+                ContactRequest.builder()
+                    .firstName(c.getFirstName())
+                    .lastName(c.getLastName())
+                    .phoneNumber(c.getPhoneNumber())
+                    .email(c.getEmail())
+                    .build())
             .toList();
     String htmlContent = HtmlMapper.mapContactListToHtmlTable(requests);
     try {
